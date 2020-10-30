@@ -26,8 +26,8 @@ app.post("/api/POST", (req, res) => {
 });
 
 // File System handler
-const FSHandler = require("./API_Handlers/FSHandler.js");
-let FS = new FSHandler();
+// const FSHandler = require("./API_Handlers/FSHandler.js");
+// let FS = new FSHandler();
 
 app.post("/api/WRITEFILE", (req, res) => {
   FS.writeFile(req.body)
