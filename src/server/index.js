@@ -49,6 +49,11 @@ app.post("/api/READFILE", (req, res) => {
     });
 });
 
+app.get("/api/test", (req, res) => {
+  console.log("test", req);
+  res.send("test")
+})
+
 app.listen(process.env.PORT || 80, () =>
   console.log(`Listening on port ${process.env.PORT || 80}!`)
 );

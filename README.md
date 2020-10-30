@@ -4,7 +4,8 @@ Use
 
         npm install
 to install dependent node modules. Run webpacker as locally, see command below
-Start a screen so you can detach, 
+
+Start a screen so you can detach and keep the server running in the background, 
 
         screen
 Run 

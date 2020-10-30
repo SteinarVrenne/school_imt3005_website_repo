@@ -1,31 +1,29 @@
 // Import React
 import React, { Component } from "react";
-// Import ReactStrap
-import {
-    Navbar,
-    NavbarBrand,
-    Nav,
-    Button,
-    CardColumns,
-    CardDeck,
-    UncontrolledTooltip,
-    ToastHeader,
-    Alert,
-    UncontrolledAlert
-} from "reactstrap";
 
 // Import components
 // import ILOInformation from "./ILOInformation.js";
+import Navbar from "./components/Navbar.js"
+import CreateMachine from "./components/CreateMachine.js";
+
 
 export default class Main extends Component {
+  constructor() {
+    super();
+  }
 
-    constructor(){
-        super()
-    }
-
-    render(){
-        return(
-            <div><h1>TEST!</h1>test</div>
-        )
-    }
+  render() {
+    return (
+      <div>
+        <Navbar></Navbar>
+        <CreateMachine></CreateMachine>
+      </div>
+    );
+  }
 }
+
+
+// Knapp for å lage server!!!!
+// Forskjellige pakker
+// Server IP 
+// Passord til VNC
