@@ -4,11 +4,22 @@ Documentation=https://bitbucket.org/SteinarVrenne/website-repo/src/master/
 After=network.target
 
 [Service]
-Environment=NODE_PORT=80
+Environment=PORT=80
 Type=simple
 User=root
 ExecStart=/usr/bin/node /home/ubuntu/website-repo/src/server/index.js
+# What directory we want the server to work from and give clients the rights to access
+WorkingDirectory=/home/ubuntu/website-repo/
+
 Restart=always
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+#Change this to find app logs in /var/log/syslog
+SyslogIdentifier=nodejs-api
 
 [Install]
 WantedBy=multi-user.target
