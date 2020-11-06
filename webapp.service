@@ -1,0 +1,14 @@
+[Unit]
+Description=Webapplication for group 4 IaC project
+Documentation=https://bitbucket.org/SteinarVrenne/website-repo/src/master/ 
+After=network.target
+
+[Service]
+Environment=NODE_PORT=80
+Type=simple
+User=root
+ExecStart=/usr/bin/node /home/ubuntu/website-repo/src/server/index.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
