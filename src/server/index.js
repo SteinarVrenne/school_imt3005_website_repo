@@ -66,45 +66,32 @@ app.get("/api/test", (req, res) => {
       }
       console.log(`stdout: ${stdout}`);
       managerIP = stdout;
-      return stdout;
+
+      sshToManager();
     }
   );
 
-  // If IP is undefined or blank continue, else EVERYTHING BROKE
-  if (managerIP) {
-    // SSH to ubuntu at manager and run script
-    exec(
-      "ssh ubuntu@" + managerIP + " 'touch /root/test.txt'",
-      (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-        // Send received IP back to client interface
-        res.send(stdout)
+  function sshToManager() {
+    // SSH to manager and run controller script and wait for stdout
+    let sshStatement =
+      "ssh ubuntu@" + managerIP + " 'touch /home/ubuntu/test.txt'";
+
+    console.log(sshStatement);
+
+    exec(sshStatement, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
       }
-    );
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      // Send received IP back to client interface
+      res.send(stdout);
+    });
   }
-
-
-  //   exec("ls -la", (error, stdout, stderr) => {
-  //     if (error) {
-  //         console.log(`error: ${error.message}`);
-  //         return;
-  //     }
-  //     if (stderr) {
-  //         console.log(`stderr: ${stderr}`);
-  //         return;
-  //     }
-  //     console.log(`stdout: ${stdout}`);
-  // });
-
-  // Wait for POST from manager
 
   // Or just get IP from STDOUT from the SSH command
 });
