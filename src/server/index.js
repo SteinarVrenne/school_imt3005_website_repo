@@ -52,7 +52,8 @@ app.post("/api/READFILE", (req, res) => {
 
 app.get("/api/test", (req, res) => {
   // Get manager IP address
-  let managerIP = exec(
+  let managerIP = undefined;
+  exec(
     "consul members | grep manager | awk '{print $2}' | cut -d ':' -f1",
     (error, stdout, stderr) => {
       if (error) {
@@ -64,10 +65,32 @@ app.get("/api/test", (req, res) => {
         return;
       }
       console.log(`stdout: ${stdout}`);
+      managerIP = stdout;
       return stdout;
     }
   );
-  console.log(managerIP);
+
+  // If IP is undefined or blank continue, else EVERYTHING BROKE
+  if (managerIP) {
+    // SSH to ubuntu at manager and run script
+    exec(
+      "ssh ubuntu@" + managerIP + " 'touch /root/test.txt'",
+      (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+        // Send received IP back to client interface
+        res.send(stdout)
+      }
+    );
+  }
+
 
   //   exec("ls -la", (error, stdout, stderr) => {
   //     if (error) {
@@ -87,7 +110,6 @@ app.get("/api/test", (req, res) => {
 });
 
 app.post("/api/srvip", (req, res) => {
-
   // Proof of concept, legacy code
   console.log(req.body);
   res.send("roger roger");
