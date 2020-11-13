@@ -16,45 +16,11 @@ app.use(express.static("public"));
 // Parse incoming data as JSON
 app.use(express.json());
 
-app.post("/api/POST", (req, res) => {
-  API[req.body.APIrequest](req.body)
-    .then((APIres) => {
-      res.send(APIres);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-});
-
-// File System handler
-// const FSHandler = require("./API_Handlers/FSHandler.js");
-// let FS = new FSHandler();
-
-app.post("/api/WRITEFILE", (req, res) => {
-  FS.writeFile(req.body)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-});
-
-app.post("/api/READFILE", (req, res) => {
-  FS.readFile(req.body)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-});
-
 app.get("/api/test", (req, res) => {
-  // Get manager IP address
+  // Get manager IP address from Consul, remove data for only the IP address and remove linebreak after
   let managerIP = undefined;
   exec(
-    "consul members | grep manager | awk '{print $2}' | cut -d ':' -f1",
+    "consul members | grep manager | awk '{print $2}' | cut -d ':' -f1 | tr -d '\n'",
     (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
@@ -72,9 +38,15 @@ app.get("/api/test", (req, res) => {
   );
 
   function sshToManager() {
+    let pass = generatePassword();
+    console.log("New password generated:" + pass);
     // SSH to manager and run controller script and wait for stdout
     let sshStatement =
-      "ssh ubuntu@" + managerIP + " 'touch /home/ubuntu/test.txt'";
+      "ssh -oStrictHostKeyChecking=no -t -t ubuntu@" +
+      managerIP +
+      " 'echo '" +
+      pass +
+      "' >> /home/ubuntu/test.txt'";
 
     console.log(sshStatement);
 
@@ -85,12 +57,28 @@ app.get("/api/test", (req, res) => {
       }
       if (stderr) {
         console.log(`stderr: ${stderr}`);
-        return;
+
+        // Only break if we did not get stdout
+        if (stderr && !stdout) return;
       }
       console.log(`stdout: ${stdout}`);
       // Send received IP back to client interface
       res.send(stdout);
     });
+  }
+
+  // Code taken from https://stackoverflow.com/questions/1497481/javascript-password-generator 
+  // Will only serve as a proof of concept random generator, but good enough for our use
+
+  function generatePassword() {
+    var length = 8,
+      charset =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
   }
 
   // Or just get IP from STDOUT from the SSH command

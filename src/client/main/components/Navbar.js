@@ -29,11 +29,16 @@ export default class MainNavbar extends Component {
             <Nav className="mr-auto" navbar>
               <NavItem>
                 <NavLink href="/components/">
-                  Click here to crash the site!
+                  {/* Click here to crash the site! */}
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavbarText>
+                  Select a machine you would like to work with!
+                </NavbarText>
+              </NavItem>
             </Nav>
-            <NavbarText>:D</NavbarText>
+            <NavbarText onClick={this.props.onClick}>Xgenic!</NavbarText>
           </Collapse>
         </Navbar>
       </div>
