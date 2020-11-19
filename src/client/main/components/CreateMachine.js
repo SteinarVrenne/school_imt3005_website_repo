@@ -8,7 +8,7 @@ import {
   Col,
 } from "reactstrap";
 
-import AwaitingServer from "../modals/awaitingServer";
+import AwaitingServer from "../modals/AwaitingServer.js";
 
 export default class MainNavbar extends Component {
   constructor() {
