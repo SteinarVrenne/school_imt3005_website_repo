@@ -53,7 +53,7 @@ app.get("/api/test", (req, res) => {
       managerIP +
       " 'python /etc/puppetlabs/code/production/scripts/kali/managerscript.py '" +
       pass +
-      "'";
+      "' pentest'";
 
     console.log(sshRunStatement);
 
