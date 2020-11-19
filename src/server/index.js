@@ -48,9 +48,16 @@ app.get("/api/test", (req, res) => {
       pass +
       "' >> /home/ubuntu/test.txt'";
 
-    console.log(sshStatement);
+    let sshRunStatement =
+      "ssh -oStrictHostKeyChecking=no -t -t ubuntu@" +
+      managerIP +
+      " 'python /etc/puppetlabs/code/production/scripts/kali/managerscript.py '" +
+      pass +
+      "'";
 
-    exec(sshStatement, (error, stdout, stderr) => {
+    console.log(sshRunStatement);
+
+    exec(sshRunStatement, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -63,11 +70,13 @@ app.get("/api/test", (req, res) => {
       }
       console.log(`stdout: ${stdout}`);
       // Send received IP back to client interface
-      res.send(stdout);
+
+      let returnObject = { stdout: stdout, pwd: pass };
+      res.send(returnObject);
     });
   }
 
-  // Code taken from https://stackoverflow.com/questions/1497481/javascript-password-generator 
+  // Code taken from https://stackoverflow.com/questions/1497481/javascript-password-generator
   // Will only serve as a proof of concept random generator, but good enough for our use
 
   function generatePassword() {

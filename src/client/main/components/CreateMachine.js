@@ -8,12 +8,15 @@ import {
   Col,
 } from "reactstrap";
 
+import AwaitingServer from "../modals/awaitingServer";
+
 export default class MainNavbar extends Component {
   constructor() {
     super();
 
     this.state = {
       packageNotSelected: true,
+      spinnerActive: false,
     };
 
     //Binds
@@ -22,7 +25,11 @@ export default class MainNavbar extends Component {
   }
 
   newMachineRequest() {
-    fetch("/api/test").then((data) => console.log(data));
+    this.setState({ spinnerActive: true });
+    fetch("/api/test").then((data) => {
+      console.log(data);
+      this.setState({ spinnerActive: false });
+    });
   }
 
   packageSelected(test) {
@@ -104,6 +111,10 @@ export default class MainNavbar extends Component {
             </UncontrolledTooltip>
           )}
         </Container>
+
+        <AwaitingServer
+          spinnerActive={this.state.spinnerActive}
+        ></AwaitingServer>
       </div>
     );
   }
