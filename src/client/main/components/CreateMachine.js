@@ -25,7 +25,9 @@ export default class MainNavbar extends Component {
   }
 
   newMachineRequest() {
+    
     this.setState({ spinnerActive: true });
+    
     fetch("/api/post/container", {
       headers: {
         Accept: "application/json",
@@ -33,11 +35,15 @@ export default class MainNavbar extends Component {
       },
       method: "POST",
       body: JSON.stringify({ package: this.state.activePackage }),
-    }).then((data) => {
-      console.log(data);
-      this.setState({ spinnerActive: false });
-    });
-
+    })
+      .then((data) => {
+        console.log(data);
+        return data.json()
+      })
+      .then((data) => {
+        console.log(data);
+        this.setState({ spinnerActive: false });
+      });
   }
 
   packageSelected(name) {
