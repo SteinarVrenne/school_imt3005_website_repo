@@ -97,8 +97,10 @@ app.post("/api/post/container", (req, res) => {
       // Sizzle toghether:
       let ipAndPort = t[0] + ":" + port
 
-      // Send received IP back to client interface
+      // Remove new lines 
+      ipAndPort = ipAndPort.replace(/(\r\n|\n|\r)/gm, "");
 
+      // Send received IP back to client interface
       let returnObject = { ipAndPort: ipAndPort, pwd: pass, errorState: errorState };
       res.send(returnObject);
     });

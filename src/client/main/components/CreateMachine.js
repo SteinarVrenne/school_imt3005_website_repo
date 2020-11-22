@@ -17,6 +17,12 @@ export default class MainNavbar extends Component {
     this.state = {
       packageNotSelected: true,
       spinnerActive: false,
+      awaitingServerModal: false,
+      modalTextData: {
+        modalHeader: "Your machine is being created!",
+        modalFooter: "The process will be over soon",
+        modalBody: "",
+      },
     };
 
     //Binds
@@ -25,9 +31,8 @@ export default class MainNavbar extends Component {
   }
 
   newMachineRequest() {
-    
-    this.setState({ spinnerActive: true });
-    
+    this.setState({ spinnerActive: true, awaitingServerModal: true });
+
     fetch("/api/post/container", {
       headers: {
         Accept: "application/json",
@@ -38,11 +43,23 @@ export default class MainNavbar extends Component {
     })
       .then((data) => {
         console.log(data);
-        return data.json()
+        return data.json();
       })
       .then((data) => {
-        console.log(data);
-        this.setState({ spinnerActive: false });
+        // console.log(data);
+
+        // Change modal to display new data
+        let modalTextData = {
+          modalHeader: "Your machine has been created!",
+          modalFooter: "Have fun!",
+          modalBody:
+            "Your machine can be located at " +
+            data.ipAndPort +
+            "/vnc.html \n Use this password to log in: " +
+            data.pwd,
+        };
+
+        this.setState({ spinnerActive: false, modalTextData: modalTextData });
       });
   }
 
@@ -128,6 +145,8 @@ export default class MainNavbar extends Component {
 
         <AwaitingServer
           spinnerActive={this.state.spinnerActive}
+          textData={this.state.modalTextData}
+          awaitingServerModal={this.state.awaitingServerModal}
         ></AwaitingServer>
       </div>
     );

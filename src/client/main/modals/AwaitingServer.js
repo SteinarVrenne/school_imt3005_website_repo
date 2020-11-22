@@ -25,25 +25,40 @@ export default class AwaitingServer extends Component {
     const spinnerStyle = {
       height: "60px",
       width: "60px",
-      margin:"0px auto"
+      margin: "0px auto",
     };
+
+    let clickedOutside = true;
+
+    const toggle = () => {
+      clickedOutside = !clickedOutside;
+    };
+
+    console.log(this.props.awaitingServerModal && clickedOutside);
 
     return (
       <div>
-        <Modal isOpen={this.props.spinnerActive}>
-          <ModalHeader>Your machine is being created!</ModalHeader>
+        <Modal
+          isOpen={this.props.awaitingServerModal && clickedOutside}
+          toggle={toggle}
+          backdrop="true"
+        >
+          <ModalHeader>{this.props.textData.modalHeader}</ModalHeader>
           <ModalBody>
-            <Container style={spinnerStyle}>
-              <Row>
-                <Spinner
-                  style={spinnerStyle}
-                  size="lg"
-                  color="success"
-                ></Spinner>
-              </Row>
-            </Container>
+            {this.props.textData.modalBody}
+            {this.props.spinnerActive && (
+              <Container style={spinnerStyle}>
+                <Row>
+                  <Spinner
+                    style={spinnerStyle}
+                    size="lg"
+                    color="success"
+                  ></Spinner>
+                </Row>
+              </Container>
+            )}
           </ModalBody>
-          <ModalFooter>The process will be over soon</ModalFooter>
+          <ModalFooter>{this.props.textData.modalFooter}</ModalFooter>
         </Modal>
       </div>
     );
