@@ -6,6 +6,8 @@ import {
   ButtonGroup,
   Row,
   Col,
+  ModalFooter,
+  ModalBody,
 } from "reactstrap";
 
 import AwaitingServer from "../modals/AwaitingServer.js";
@@ -22,6 +24,7 @@ export default class MainNavbar extends Component {
         modalHeader: "Your machine is being created!",
         modalFooter: "The process will be over soon",
         modalBody: "",
+        modalFooterButton: "",
       },
     };
 
@@ -52,11 +55,37 @@ export default class MainNavbar extends Component {
         let modalTextData = {
           modalHeader: "Your machine has been created!",
           modalFooter: "Have fun!",
-          modalBody:
-            "Your machine can be located at " +
-            data.ipAndPort +
-            "/vnc.html \n Use this password to log in: " +
-            data.pwd,
+          modalBody: (
+            <ModalBody>
+              Your machine can be located at{" "}
+              <a href={data.ipAndPort + "/vnc.html"}>
+                {"http://" + data.ipAndPort + "/vnc.html"}
+              </a>
+              .
+              <br />
+              <br />
+              Use password:{data.pwd} when prompted.
+            </ModalBody>
+          ),
+          modalFooterButton: (
+            <ModalFooter>
+              <div
+                style={{
+                  margin: "0px auto",
+                  paddingRight: "10%",
+                  paddingLeft: "10%",
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    this.setState({ awaitingServerModal: false });
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
+            </ModalFooter>
+          ),
         };
 
         this.setState({ spinnerActive: false, modalTextData: modalTextData });

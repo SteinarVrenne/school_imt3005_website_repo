@@ -18,21 +18,7 @@ export default class AwaitingServer extends Component {
   constructor() {
     super();
 
-    this.state = { clickedOutside: true };
-
-    this.toggle = this.toggle.bind(this);
-  }
-
-  toggle() {
-    if (this.props.spinnerActive) {
-      return true;
-    }
-    this.setState({ clickedOutside: !this.state.clickedOutside });
-    return this.props.awaitingServerModal && this.state.clickedOutside;
-  }
-
-  componentWillUnmount() {
-    this.setState({ clickedOutside: true });
+    this.state = {};
   }
 
   render() {
@@ -44,10 +30,7 @@ export default class AwaitingServer extends Component {
 
     return (
       <div>
-        <Modal
-          isOpen={this.props.awaitingServerModal && this.state.clickedOutside}
-          toggle={this.toggle}
-        >
+        <Modal isOpen={this.props.awaitingServerModal}>
           <ModalHeader>{this.props.textData.modalHeader}</ModalHeader>
           <ModalBody>
             {this.props.textData.modalBody}
@@ -63,7 +46,14 @@ export default class AwaitingServer extends Component {
               </Container>
             )}
           </ModalBody>
-          <ModalFooter>{this.props.textData.modalFooter}</ModalFooter>
+          <ModalFooter
+            style={{
+              display: "block",
+            }}
+          >
+            {this.props.textData.modalFooter}
+          </ModalFooter>
+          {this.props.textData.modalFooterButton}
         </Modal>
       </div>
     );
