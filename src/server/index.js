@@ -16,7 +16,8 @@ app.use(express.static("public"));
 // Parse incoming data as JSON
 app.use(express.json());
 
-app.get("/api/test", (req, res) => {
+app.post("/api/post/container", (req, res) => {
+  console.log(req.body);
   // Get manager IP address from Consul, remove data for only the IP address and remove linebreak after
   let managerIP = undefined;
   exec(
@@ -51,9 +52,12 @@ app.get("/api/test", (req, res) => {
     let sshRunStatement =
       "ssh -oStrictHostKeyChecking=no -t -t ubuntu@" +
       managerIP +
-      " 'python /etc/puppetlabs/code/production/scripts/kali/managerscript.py '" +
+      " '/usr/bin/python /etc/puppetlabs/code/environments/production/scripts/kali/managerscript.py " +
       pass +
-      "' pentest'";
+      " " +
+      req.body.package +
+      "'";
+    // " pentest'";
 
     console.log(sshRunStatement);
 

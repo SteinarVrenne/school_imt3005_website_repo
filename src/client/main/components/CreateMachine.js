@@ -26,15 +26,23 @@ export default class MainNavbar extends Component {
 
   newMachineRequest() {
     this.setState({ spinnerActive: true });
-    fetch("/api/test").then((data) => {
+    fetch("/api/post/container", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ package: this.state.activePackage }),
+    }).then((data) => {
       console.log(data);
       this.setState({ spinnerActive: false });
     });
+
   }
 
-  packageSelected(test) {
-    this.setState({ packageNotSelected: false });
-    console.log(test);
+  packageSelected(name) {
+    this.setState({ packageNotSelected: false, activePackage: name });
+    console.log(name);
   }
 
   render() {
@@ -48,7 +56,7 @@ export default class MainNavbar extends Component {
     let buttonNames = [
       "Forensics Package",
       "Penetration Testing Package",
-      "Incident Response Package",
+      "Steganography Package",
     ];
 
     return (
@@ -61,7 +69,7 @@ export default class MainNavbar extends Component {
                   size="lg"
                   color="primary"
                   onClick={() => {
-                    this.packageSelected(buttonNames[0]);
+                    this.packageSelected("forensics");
                   }}
                   style={{ width: "33%" }}
                 >
@@ -71,7 +79,7 @@ export default class MainNavbar extends Component {
                   size="lg"
                   color="success"
                   onClick={() => {
-                    this.packageSelected(buttonNames[1]);
+                    this.packageSelected("pentest");
                   }}
                   style={{ width: "33%" }}
                 >
@@ -81,7 +89,7 @@ export default class MainNavbar extends Component {
                   size="lg"
                   color="danger"
                   onClick={() => {
-                    this.packageSelected(buttonNames[2]);
+                    this.packageSelected("stego");
                   }}
                   style={{ width: "33%" }}
                 >
