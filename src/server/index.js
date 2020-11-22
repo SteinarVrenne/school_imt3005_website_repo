@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.post("/api/post/container", (req, res) => {
   console.log(req.body);
-  
+
   // Get manager IP address from Consul, remove data for only the IP address and remove linebreak after
   let managerIP = undefined;
   exec(
@@ -58,10 +58,11 @@ app.post("/api/post/container", (req, res) => {
       " " +
       req.body.package +
       "'";
-      
+
     console.log(sshRunStatement);
 
     exec(sshRunStatement, (error, stdout, stderr) => {
+      let errorState = false;
       if (error) {
         console.log(`error: ${error.message}`);
         return;
@@ -70,12 +71,35 @@ app.post("/api/post/container", (req, res) => {
         console.log(`stderr: ${stderr}`);
 
         // Only break if we did not get stdout
-        if (stderr && !stdout) return;
+        if (stderr && !stdout) {
+          console.log("WILL BREAK!");
+          errorState = true;
+          return;
+        }
       }
       console.log(`stdout: ${stdout}`);
+
+      // Sanitize stdout for only an IP 
+      var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/; //http://www.regular-expressions.info/examples.html
+
+      var a = stdout
+      
+      // Only interested in the last characters that are printed. Potentially an IP address is here.
+      a = a.substring(a.length, a.length - 22);
+
+      var t = a.match(r);
+      console.log(t[0]);
+      
+      let index = a.indexOf(":");
+      let port = a.substring(index + 1);
+      console.log(port);
+
+      // Sizzle toghether:
+      let ipAndPort = t[0] + ":" + port
+
       // Send received IP back to client interface
 
-      let returnObject = { stdout: stdout, pwd: pass };
+      let returnObject = { ipAndPort: ipAndPort, pwd: pass, errorState: errorState };
       res.send(returnObject);
     });
   }
