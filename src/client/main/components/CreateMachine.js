@@ -65,7 +65,6 @@ export default class MainNavbar extends Component {
 
   packageSelected(name) {
     this.setState({ packageNotSelected: false, activePackage: name });
-    console.log(name);
   }
 
   render() {
