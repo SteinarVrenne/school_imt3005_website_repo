@@ -18,7 +18,6 @@ app.use(express.json());
 
 app.post("/api/post/container", (req, res) => {
   console.log(req.body);
-  res.send({pwd: 200, ipAndPort:300})
 
   // Get manager IP address from Consul, remove data for only the IP address and remove linebreak after
   let managerIP = undefined;
