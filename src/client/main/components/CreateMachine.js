@@ -58,13 +58,13 @@ export default class MainNavbar extends Component {
           modalBody: (
             <ModalBody>
               Your machine can be located at{" "}
-              <a href={data.ipAndPort + "/vnc.html"}>
+              <a target="_blank" href={"http://" + data.ipAndPort + "/vnc.html"}>
                 {"http://" + data.ipAndPort + "/vnc.html"}
               </a>
               .
               <br />
               <br />
-              Use password:{data.pwd} when prompted.
+              Use password: "{data.pwd}" when prompted.
             </ModalBody>
           ),
           modalFooterButton: (
